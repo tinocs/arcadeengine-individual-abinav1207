@@ -23,6 +23,7 @@ public class Ball extends Actor {
         dy = 5;
     }
 
+
     @Override
     public void act(long now) {
         move(dx, dy);
