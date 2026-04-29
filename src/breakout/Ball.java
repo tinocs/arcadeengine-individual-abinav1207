@@ -67,10 +67,38 @@ public class Ball extends Actor {
                 dy = -dy;
             }
 
-            getWorld().remove(brick);
-
+            if(brick.getType() =='1'){
+                breakNeighbors(brick);
+            }else{
+                getWorld().remove(brick);
+            }
             BallWorld world = (BallWorld) getWorld();
             world.getScore().setValue(world.getScore().getValue() + 100);
         }
+    }
+
+    private void breakNeighbors(Brick b){
+        BallWorld world = (BallWorld) getWorld();
+        double x = b.getX() + b.getWidth()/2;
+        double y = b.getY()+ b.getHeight()/2;
+        java.util.List<Brick> allBricks = world.getObjects(Brick.class);
+        java.util.ArrayList<Brick> toRemove = new java.util.ArrayList<>();
+
+        for (Brick  a : allBricks){
+            if(a.getType()=='1'){
+                double bX = a.getX() + a.getWidth()/2;
+                double bY = a.getY() + a.getHeight()/2;
+                double distance = Math.sqrt(Math.pow(x - bX, 2) + Math.pow(y - bY, 2));
+
+                if(distance <100){
+                    toRemove.add(a);
+                }
+            }
+        }
+        for(Brick a : toRemove){
+            world.remove(a);
+            world.getScore().setValue(world.getScore().getValue() + 100);
+        }
+
     }
 }

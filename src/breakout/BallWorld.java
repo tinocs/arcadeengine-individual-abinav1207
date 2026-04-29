@@ -1,5 +1,8 @@
 package breakout;
 
+import java.io.*;
+import java.util.*;
+
 import engine.World;
 /*
  * Author: Abhinav Patti
@@ -8,8 +11,9 @@ import engine.World;
  */
 
 public class BallWorld extends World {
-
+    private int level = 1;
     private Score score;
+
     public BallWorld() {
         setPrefSize(800, 600);
     }
@@ -25,6 +29,7 @@ public class BallWorld extends World {
         paddle.setY(getHeight() - 80);
 
         add(ball);
+        
         add(paddle);
 
         score = new Score();
@@ -32,14 +37,10 @@ public class BallWorld extends World {
         score.setY(30);
         getChildren().add(score);
 
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < 8; col++) {
-                Brick brick = new Brick();
-                brick.setX(80 + col * 80);
-                brick.setY(60 + row * 35);
-                add(brick);
-            }
-        }
+
+        loadBricks("Level" + level + ".txt");
+
+
 
         setOnMouseMoved(event -> {
             paddle.setX(event.getX() - paddle.getWidth() / 2);
@@ -53,9 +54,48 @@ public class BallWorld extends World {
         });
     }
 
+    private void loadBricks(String filename){
+        try{
+            Scanner sc = new Scanner(new File("src/breakoutresources/" + filename));
+             int row = sc.nextInt();
+             int col = sc.nextInt();
+             sc.nextLine();
+
+             for (int r = 0; r < row; r++) {
+                String line = sc.nextLine();
+                for (int c = 0; c < col; c++) {
+                    if(line.charAt(c) != '0'){
+                    Brick brick = new Brick(line.charAt(c));
+                    brick.setX(80 + c * 80);
+                    brick.setY(60 + r * 35);
+                    add(brick);
+                    }
+                }
+            }
+            sc.close();
+        } catch (Exception e){
+            System.out.println("Could not find File");
+        }
+        
+    }
+
     @Override
     public void act(long now) {
+        if(getObjects(Brick.class).isEmpty()){
+            level++;
+        
+        if(level>2){
+            Breakout.showMenu();
+        }else{
+            loadBricks("level" + level + ".txt");
+            if(!getObjects(Brick.class).isEmpty()){
+            Ball ball = getObjects(Ball.class).get(0);
+            ball.setX(getWidth()/2);
+            ball.setY(getHeight()/2);
+            }
+        }
     }
+}
     public Score getScore() {
         return score;
     }

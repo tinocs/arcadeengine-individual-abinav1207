@@ -10,13 +10,23 @@ import javafx.scene.image.Image;
  */
 
 public class Brick extends Actor {
-
+private char type;
     
-    public Brick() {
+    public Brick(char type) {
+        this.type = type;
+        if(type=='1'){
         String path = getClass().getClassLoader()
                 .getResource("breakoutresources/brick.png").toString();
         setImage(new Image(path));
+    }else if(type=='2'){
+        String path = getClass().getClassLoader()
+                .getResource("breakoutresources/brick2.png").toString();
+        setImage(new Image(path));
     }
+}
+public char getType(){
+    return type;
+}
 
     @Override
     public void act(long now) {
