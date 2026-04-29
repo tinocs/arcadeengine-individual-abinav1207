@@ -13,6 +13,7 @@ import engine.World;
 public class BallWorld extends World {
     private int level = 1;
     private Score score;
+    private Lives lives;
 
     public BallWorld() {
         setPrefSize(800, 600);
@@ -37,8 +38,12 @@ public class BallWorld extends World {
         score.setY(30);
         getChildren().add(score);
 
+        lives = new Lives();
+        lives.setX(650);
+        lives.setY(30);
+        getChildren().add(lives);
 
-        loadBricks("Level" + level + ".txt");
+        loadBricks("level" + level + ".txt");
 
 
 
@@ -98,5 +103,8 @@ public class BallWorld extends World {
 }
     public Score getScore() {
         return score;
+    }
+    public Lives getLives(){
+        return lives;
     }
 }
